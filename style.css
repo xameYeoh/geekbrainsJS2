@@ -1,0 +1,28 @@
+.container {
+    width: 1440px;
+    margin: 0 auto;
+}
+
+.goods-list {
+    display: flex;
+    justify-content: space-between;
+}
+
+.goods-item {
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    background-color: #306884;
+    color: #ffffff;
+}
+
+.cart-button {
+    border-radius: 4px;
+    background-color: #306884;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+}
