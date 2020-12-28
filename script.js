@@ -103,3 +103,4 @@ class CartItem extends GoodsItem {
 const list = new GoodsList();
 list.fetchGoods();
 list.render();
+console.log(list.goodsSum());
