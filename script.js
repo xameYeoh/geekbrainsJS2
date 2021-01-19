@@ -1,20 +1,3 @@
-// const goods = [
-//     { title: 'Shirt', price: 150 },
-//     { title: 'Socks', price: 50 },
-//     { title: 'Jacket', price: 350 },
-//     { title: 'Shoes', price: 250 },
-//   ];
-
-//   const renderGoodsItem = (title, price) => {
-//     return `<div class="goods-item"><h3>${title}</h3><p>${price}</p></div>`;
-//   };
-
-//   const renderGoodsList = (list) => {
-//     const goodsList = list.map(item => renderGoodsItem(item.title, item.price));
-//     document.querySelector('.goods-list').innerHTML = goodsList.join('');
-//   }
-
-//   renderGoodsList(goods);
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
 function makeGETRequest(url, callback) {
@@ -39,8 +22,8 @@ function makeGETRequest(url, callback) {
 
 
 class GoodsItem {
-    constructor(title, price, id) {
-        this.title = title;
+    constructor(product_name, price, id) {
+        this.product_name = product_name;
         this.price = price;
         this.id = id;
     }
@@ -51,19 +34,16 @@ class GoodsItem {
 
 
 class GoodsList {
-    constructor() {
-        this.goods = [];
-    }
+
     fetchGoods() {
-        return new Promise(function (resolve) {
+        //промис
+        return new Promise((resolve) => {
             makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
                 this.goods = JSON.parse(goods);
                 resolve("Done");
             })
         })
-
     }
-
 
     goodsSum() {
         return this.goods.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0);
@@ -79,7 +59,7 @@ class GoodsList {
     }
 }
 
-class Cart extends GoodsList {
+class Cart {
     constructor() {
         this.goods = [];
     }
@@ -90,17 +70,19 @@ class Cart extends GoodsList {
 
     deleteItem(id) {
         //убрать продукт одного типа из корзины
-        let searchedGoodIndex = goodsList.findIndex(good => good.id == id ? true : false);
-        if (!searchedGood) return;
+        let searchedGoodIndex = this.goods.findIndex(good => good.id_product == id ? true : false);
+        console.log(searchedGoodIndex);
+        if (searchedGoodIndex == -1) return;
 
         this.goods.splice(searchedGoodIndex);
     }
 
 
 
-    addItem(id, quantity = 1, goodsList) {
+    addItem(id, goodsList, quantity = 1) {
         //добавить один или несколько продуктов одного типа в корзину
-        let searchedGood = goodsList.find(good => good.id == id ? true : false);
+
+        let searchedGood = goodsList.find(good => good.id_product == id ? true : false);
         if (!searchedGood || quantity < 1) return;
         for (let i = 0; i < quantity; i++) {
             this.goods.push(searchedGood);
@@ -110,10 +92,10 @@ class Cart extends GoodsList {
     render() {
         let listHtml = '';
         this.goods.forEach(good => {
-            const cartItem = new CartItem(good.title, good.price);
+            const cartItem = new CartItem(good.product_name, good.price);
             listHtml += cartItem.render();
         });
-        document.querySelector('.goods-list').innerHTML = listHtml;
+        document.querySelector('.cart').innerHTML = listHtml;
     }
 
 }
@@ -122,11 +104,31 @@ class CartItem extends GoodsItem {
     constructor(title, price, id) {
         super(title, price, id);
     }
+    render() {
+        return `<div class="cart-item"><h3>${this.product_name}</h3><p>${this.price}</p></div>`;
+    }
 }
 
 const list = new GoodsList();
+const cart = new Cart();
+//вызов fetchgoods 
 let promise = list.fetchGoods();
+//вызов render в результате fulfilled promise(удачного выполнения fetchgoods)
 promise.then(
-    () => list.render()
+    () => {
+        list.render();
+        //добавить ноутбук в корзину
+        cart.addItem(123, list.goods);
+        //добавить 3 мышки в корзину
+        cart.addItem(456, list.goods, 3);
+        console.log(cart.goods);
+        cart.render();
+
+    }
 );
-console.log(list.goodsSum());
+// promise.then(
+//     () => {
+//         cart.deleteItem(123);
+//         console.log(cart.goods);
+//     }
+// )
