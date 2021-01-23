@@ -4,5 +4,5 @@ let changed = text.replace(/'/gm, '"');
 console.log(changed);
 //task2
 const text2 = "Hello 'User' and 'admin'";
-let changed2 = text.replace(/^'|'$|\s'/gm, ' "')
+let changed2 = text.replace(/'\s/gm, '" ').replace(/\s'/gm, ' "').replace(/^'|'$/gm, '"');
 console.log(changed2);
