@@ -7,20 +7,29 @@
 </head>
 
 <body>
-    <header>
+    <div id="app">
+        <header>
+            <input type="text" class="goods-search" v-model="searchLine" />
+            <!-- <button class="search-button" type="button" @click="filterGoods">Искать</button> -->
+            <button class="cart-button" type="button">Корзина</button>
+        </header>
+        <main>
+            <div class="container">
+                <h2>eShop</h2>
+                <div class="goods-list">
+                    <div class="goods-item" v-for="good in filteredGoods">
+                        <h3>{{ good.product_name }}</h3>
+                        <p>{{ good.price }}</p>
+                        <h3 v-if="filteredGoods.length == 0">Нет данных</h3>
+                    </div>
 
-    </header>
-    <main>
-        <div class="container">
-            <h2>eShop</h2>
-            <div class="goods-list"></div>
-            <h2>Cart</h2>
-            <div class="cart"></div>
-        </div>
-    </main>
-
+                </div>
+                <h2>Cart</h2>
+                <div class="cart"></div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="script.js"></script>
-
 </body>
 
 </html>

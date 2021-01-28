@@ -1,28 +1,54 @@
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+const app = new Vue({
+    el: '#app',
+    data: {
+        goods: [],
+        searchLine: '',
+        isVisibleCart: true
+    },
+    methods: {
+        makeGETRequest(url) {
+            return new Promise((resolve) => {
+                const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+                var xhr;
 
-function makeGETRequest(url) {
-    return new Promise((resolve) => {
-        var xhr;
+                if (window.XMLHttpRequest) {
+                    xhr = new XMLHttpRequest();
+                } else if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
 
-        if (window.XMLHttpRequest) {
-            xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject) {
-            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        resolve(xhr.responseText);
+                    }
+                }
+
+                xhr.open('GET', url, true);
+                xhr.send();
+            });
+        },
+
+
+    },
+    computed: {
+        filteredGoods() {
+            return this.goods.filter((good) => good.product_name.includes(this.searchLine));
+        },
+        noGoods() {
+            if (this.filteredGoods().length == 0) return true;
+            return true;
+
         }
+    },
+    mounted() {
+        this.makeGETRequest(`${API_URL}/catalogData.json`).then((goods) => {
+            this.goods = JSON.parse(goods);
+        });
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                resolve(xhr.responseText);
-            }
-        }
+    }
 
-        xhr.open('GET', url, true);
-        xhr.send();
-    });
-
-}
-
-
+});
 
 class GoodsItem {
     constructor(product_name, price, id) {
@@ -38,15 +64,6 @@ class GoodsItem {
 
 class GoodsList {
 
-    fetchGoods() {
-        //промис
-        return new Promise((resolve) => {
-            makeGETRequest(`${API_URL}/catalogData.json`).then((goods) => {
-                this.goods = JSON.parse(goods);
-                resolve("Done");
-            });
-        })
-    }
 
     goodsSum() {
         return this.goods.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0);
@@ -114,24 +131,18 @@ class CartItem extends GoodsItem {
 
 const list = new GoodsList();
 const cart = new Cart();
-//вызов fetchgoods 
-let promise = list.fetchGoods();
-//вызов render в результате fulfilled promise(удачного выполнения fetchgoods)
-promise.then(
-    () => {
-        list.render();
-        //добавить ноутбук в корзину
-        cart.addItem(123, list.goods);
-        //добавить 3 мышки в корзину
-        cart.addItem(456, list.goods, 3);
-        console.log(cart.goods);
-        cart.render();
 
-    }
-);
+// let promise = app.mounted();
+//вызов render в результате fulfilled promise(удачного выполнения fetchgoods)
 // promise.then(
 //     () => {
-//         cart.deleteItem(123);
+//         list.render();
+//         //добавить ноутбук в корзину
+//         cart.addItem(123, list.goods);
+//         //добавить 3 мышки в корзину
+//         cart.addItem(456, list.goods, 3);
 //         console.log(cart.goods);
+//         cart.render();
+
 //     }
-// )
+// );
