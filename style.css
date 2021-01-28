@@ -1,0 +1,33 @@
+.container {
+    width: 1440px;
+    margin: 0 auto;
+}
+
+.goods-list, .cart {
+    display: flex;
+    justify-content: space-between;
+}
+
+.goods-item, .cart-item {
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    background-color: #306884;
+    color: #ffffff;
+    margin: 0 0 50px 0;
+}
+
+.cart-item {
+    background-color: #ff8800;
+}
+
+.cart-button {
+    border-radius: 4px;
+    background-color: #306884;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+}
