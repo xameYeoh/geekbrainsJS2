@@ -20,9 +20,9 @@
                     <div class="goods-item" v-for="good in filteredGoods">
                         <h3>{{ good.product_name }}</h3>
                         <p>{{ good.price }}</p>
-                        <h3 v-if="filteredGoods.length == 0">Нет данных</h3>
-                    </div>
 
+                    </div>
+                    <p v-if="filteredGoods.length == 0">Нет данных</p>
                 </div>
                 <h2>Cart</h2>
                 <div class="cart"></div>

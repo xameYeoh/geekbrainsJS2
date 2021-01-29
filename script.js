@@ -28,6 +28,11 @@ const app = new Vue({
                 xhr.send();
             });
         },
+        noGoods() {
+            if (this.filteredGoods().length == 0) return true;
+            return false;
+
+        }
 
 
     },
@@ -35,11 +40,7 @@ const app = new Vue({
         filteredGoods() {
             return this.goods.filter((good) => good.product_name.includes(this.searchLine));
         },
-        noGoods() {
-            if (this.filteredGoods().length == 0) return true;
-            return true;
 
-        }
     },
     mounted() {
         this.makeGETRequest(`${API_URL}/catalogData.json`).then((goods) => {
