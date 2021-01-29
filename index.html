@@ -11,7 +11,7 @@
         <header>
             <input type="text" class="goods-search" v-model="searchLine" />
             <!-- <button class="search-button" type="button" @click="filterGoods">Искать</button> -->
-            <button class="cart-button" type="button">Корзина</button>
+            <button class="cart-button" type="button" @click="cartToggler">Корзина</button>
         </header>
         <main>
             <div class="container">
@@ -24,8 +24,10 @@
                     </div>
                     <p v-if="noGoods">Нет данных</p>
                 </div>
-                <h2>Cart</h2>
-                <div class="cart"></div>
+
+                <div class="cart" v-if="isVisibleCart">
+                    <h2>Cart</h2>
+                </div>
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>

@@ -4,7 +4,7 @@ const app = new Vue({
     data: {
         goods: [],
         searchLine: '',
-        isVisibleCart: true
+        isVisibleCart: false
     },
     methods: {
         makeGETRequest(url) {
@@ -28,6 +28,9 @@ const app = new Vue({
                 xhr.send();
             });
         },
+        cartToggler() {
+            return this.isVisibleCart = !this.isVisibleCart;
+        }
 
 
 
