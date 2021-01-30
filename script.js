@@ -1,4 +1,63 @@
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
+Vue.component('goods-search', {
+    template: `
+    <input type="text" class="goods-search" v-on:input="$emit('input', $event.target.value)"/>
+    `
+
+});
+
+Vue.component('cart', {
+    props: ['cartVisibility'],
+    template: `
+    <div class="cart" v-if="cartVisibility">
+                    <h2>Cart</h2>
+                    <cart-item></cart-item>
+                </div>
+    `,
+    methods: {
+
+    }
+});
+
+Vue.component('cart-item', {
+    props: [''],
+    template: `
+    <div class="cart-item">
+            <h3>{{ good.product_name }}</h3>
+            <p>{{ good.price }}</p>
+    </div>
+    `,
+    methods: {
+
+    }
+});
+
+Vue.component('goods-list', {
+    props: ['goods'],
+    template: `<div class="goods-list">
+                        <goods-item v-for="good in goods" :good="good"></goods-item>
+
+            </div>`
+});
+
+Vue.component('goods-item', {
+    props: ['good', 'cart'],
+    template: `
+    <div class="goods-item">
+        <h3>{{ good.product_name }}</h3>
+        <p>{{ good.price }}</p>
+       
+    </div>
+    `,
+    // methods:{
+    //     addToCart(){
+    //         this.cart.push(good);
+    //     }
+    // }
+});
+
+
 const app = new Vue({
     el: '#app',
     data: {
@@ -6,6 +65,23 @@ const app = new Vue({
         searchLine: '',
         isVisibleCart: false
     },
+
+    template: `
+        <div>
+        <header>
+            <goods-search v-model="searchLine"></goods-search>
+            <button class="cart-button" type="button" @click="cartToggler">Cart</button>
+        </header>
+        <main>
+            <div class="container">
+                <h2>eShop</h2>
+                <goods-list :goods="filteredGoods"></goods-list>
+                <p v-if="noGoods">Нет данных</p>
+                <cart :cart-visibility="isVisibleCart"></cart>
+            </div>
+        </main>
+   </div>
+    `,
     methods: {
         makeGETRequest(url) {
             return new Promise((resolve) => {
@@ -30,6 +106,9 @@ const app = new Vue({
         },
         cartToggler() {
             return this.isVisibleCart = !this.isVisibleCart;
+        },
+        returnSearchLine() {
+            return this.searchLine;
         }
 
 
@@ -42,7 +121,8 @@ const app = new Vue({
         noGoods() {
             if (this.filteredGoods.length == 0) return true;
             return false;
-        }
+        },
+
 
     },
     mounted() {
@@ -103,14 +183,14 @@ class Cart {
 
 
 
-    addItem(id, goodsList, quantity = 1) {
+    addItem(id, goodsList) {
         //добавить один или несколько продуктов одного типа в корзину
 
         let searchedGood = goodsList.find(good => good.id_product == id ? true : false);
-        if (!searchedGood || quantity < 1) return;
-        for (let i = 0; i < quantity; i++) {
-            this.goods.push(searchedGood);
-        }
+        if (!searchedGood) return;
+
+        this.goods.push(searchedGood);
+
     }
 
     render() {
@@ -132,21 +212,3 @@ class CartItem extends GoodsItem {
         return `<div class="cart-item"><h3>${this.product_name}</h3><p>${this.price}</p></div>`;
     }
 }
-
-const list = new GoodsList();
-const cart = new Cart();
-
-// let promise = app.mounted();
-//вызов render в результате fulfilled promise(удачного выполнения fetchgoods)
-// promise.then(
-//     () => {
-//         list.render();
-//         //добавить ноутбук в корзину
-//         cart.addItem(123, list.goods);
-//         //добавить 3 мышки в корзину
-//         cart.addItem(456, list.goods, 3);
-//         console.log(cart.goods);
-//         cart.render();
-
-//     }
-// );
