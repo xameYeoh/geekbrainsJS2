@@ -8,24 +8,25 @@ Vue.component('goods-search', {
 });
 
 Vue.component('cart', {
-    props: ['cartVisibility'],
+    props: ['cartVisibility', 'cart', 'removeFromCart'],
     template: `
     <div class="cart" v-if="cartVisibility">
                     <h2>Cart</h2>
-                    <cart-item></cart-item>
+                    <div class="cart-list">
+                        <cart-item v-for="good in cart" :good="good" :removeFromCart="removeFromCart"></cart-item>
+                    </div>
                 </div>
-    `,
-    methods: {
-
-    }
+    `
 });
 
 Vue.component('cart-item', {
-    props: [''],
+    props: ['good', 'removeFromCart'],
     template: `
     <div class="cart-item">
             <h3>{{ good.product_name }}</h3>
             <p>{{ good.price }}</p>
+            <p> {{good.quantity}}</p>
+            <button class="remove-button" type="button" @click="removeFromCart(good.id_product)">Remove</button>
     </div>
     `,
     methods: {
@@ -34,19 +35,20 @@ Vue.component('cart-item', {
 });
 
 Vue.component('goods-list', {
-    props: ['goods'],
+    props: ['goods', 'addToCart'],
     template: `<div class="goods-list">
-                        <goods-item v-for="good in goods" :good="good"></goods-item>
+                        <goods-item v-for="good in goods" :good="good" :addToCart="addToCart"></goods-item>
 
             </div>`
 });
 
 Vue.component('goods-item', {
-    props: ['good', 'cart'],
+    props: ['good', 'addToCart'],
     template: `
     <div class="goods-item">
         <h3>{{ good.product_name }}</h3>
         <p>{{ good.price }}</p>
+        <button class="add-button" type="button" @click="addToCart(good.id_product)">Buy</button>
        
     </div>
     `,
@@ -63,7 +65,8 @@ const app = new Vue({
     data: {
         goods: [],
         searchLine: '',
-        isVisibleCart: false
+        isVisibleCart: false,
+        cart: []
     },
 
     template: `
@@ -75,9 +78,9 @@ const app = new Vue({
         <main>
             <div class="container">
                 <h2>eShop</h2>
-                <goods-list :goods="filteredGoods"></goods-list>
+                <goods-list :goods="filteredGoods" :addToCart="addToCart"></goods-list>
                 <p v-if="noGoods">Нет данных</p>
-                <cart :cart-visibility="isVisibleCart"></cart>
+                <cart :cart-visibility="isVisibleCart" :cart="cart" :removeFromCart = "removeFromCart"></cart>
             </div>
         </main>
    </div>
@@ -109,6 +112,25 @@ const app = new Vue({
         },
         returnSearchLine() {
             return this.searchLine;
+        },
+        addToCart(id) {
+            let goodsItem = this.goods.find((good) => good.id_product == id ? true : false);
+            let cartItem = this.cart.find(elem => elem == goodsItem);
+
+            if (!cartItem) {
+                this.cart.push(goodsItem);
+                this.$set(this.cart[this.cart.length - 1], 'quantity', 1)
+            } else {
+                cartItem.quantity++;
+            }
+            console.log(this.cart)
+        },
+        removeFromCart(id) {
+            let cartItem = this.goods.find((good) => good.id_product == id);
+            if (cartItem.quantity == 1) {
+                this.cart.splice(this.goods.indexOf(cartItem));
+            } else cartItem.quantity--;
+
         }
 
 
@@ -201,6 +223,7 @@ class Cart {
         });
         document.querySelector('.cart').innerHTML = listHtml;
     }
+
 
 }
 
