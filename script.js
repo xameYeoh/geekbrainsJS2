@@ -107,6 +107,27 @@ const app = new Vue({
                 xhr.send();
             });
         },
+        makePOSTRequest(url, data, callback) {
+            let xhr;
+
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else if (window.ActiveXObject) {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    callback(xhr.responseText);
+                }
+            }
+
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+            xhr.send(data);
+        },
+
         cartToggler() {
             return this.isVisibleCart = !this.isVisibleCart;
         },
@@ -148,7 +169,7 @@ const app = new Vue({
 
     },
     mounted() {
-        this.makeGETRequest(`${API_URL}/catalogData.json`).then((goods) => {
+        this.makeGETRequest(`/catalogData`).then((goods) => {
             this.goods = JSON.parse(goods);
         });
 

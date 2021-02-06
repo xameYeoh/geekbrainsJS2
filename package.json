@@ -1,0 +1,24 @@
+{
+  "name": "geekbrainsjs2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xameYeoh/geekbrainsJS2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xameYeoh/geekbrainsJS2/issues"
+  },
+  "homepage": "https://github.com/xameYeoh/geekbrainsJS2",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-static": "^0.7.11",
+    "npx": "^10.2.2"
+  }
+}
