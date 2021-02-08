@@ -4,7 +4,8 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "node-static": "^0.7.11",
-    "npx": "^10.2.2"
+    "npx": "^10.2.2",
+    "webpack": "^5.21.2",
+    "webpack-cli": "^4.5.0"
   }
 }
