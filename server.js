@@ -16,20 +16,26 @@ app.get('/catalogData', (req, res) => {
 
 app.post('/addToCart', (req, res) => {
     fs.readFile('cart.json', 'utf8', (err, data) => {
-        const cart = JSON.parse(data);
-        const item = req.body;
+        if (err) {
+            res.send('{"result": 0}');
+        } else {
+            const cart = JSON.parse(data);
+            const item = req.body;
 
-        fs.writeFile('cart.json', JSON.stringify(cart), (err) => {
-            if (err) {
-                res.send('{"result": 0}');
-            } else {
-                res.send('{"result": 1}');
-            }
+            cart.push(item);
 
-        });
-
+            fs.writeFile('cart.json', JSON.stringify(cart), (err) => {
+                if (err) {
+                    res.send('{"result": 0}');
+                } else {
+                    res.send('{"result": 1}');
+                }
+            });
+        }
     });
 });
+
+
 
 app.listen(3000, function () {
     console.log('server is running on port 3000!');
