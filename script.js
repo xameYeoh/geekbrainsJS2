@@ -52,11 +52,7 @@ Vue.component('goods-item', {
        
     </div>
     `,
-    // methods:{
-    //     addToCart(){
-    //         this.cart.push(good);
-    //     }
-    // }
+
 });
 
 
