@@ -29,6 +29,7 @@ app.post('/api/addToCart', (req, res) => {
 
             cart.push(item);
 
+
             fs.writeFile('cart.json', JSON.stringify(cart), (err) => {
                 if (err) {
                     res.send('{"result": 0}');
@@ -36,6 +37,23 @@ app.post('/api/addToCart', (req, res) => {
                     res.send('{"result": 1}');
                 }
             });
+            fs.readFile('stats.json', 'utf8', (err, data) => {
+                if (err) console.log('Error reading from stats file');
+                else {
+                    const stats = JSON.parse(data);
+                    stats.push({
+                        "product_name": item.product_name,
+                        "Action": "Added",
+                        "Date": Date(),
+                    });
+                    fs.writeFile('stats.json', JSON.stringify(stats), (err) => {
+                        if (err) console.log('Error writing to stats file');
+                        else console.log('Request saved');
+                    });
+
+                }
+
+            })
         }
     });
 });
@@ -48,8 +66,11 @@ app.delete('/api/removeFromCart/:id', (req, res) => {
         } else {
             const cart = JSON.parse(data);
             const itemId = req.params.id;
+            const searchedGoodName = cart.find((good) => good.id == itemId).product_name;
 
             cart.splice(cart.findIndex((good) => good.id == itemId));
+
+
 
             fs.writeFile('cart.json', JSON.stringify(cart), (err) => {
                 if (err) {
@@ -58,6 +79,26 @@ app.delete('/api/removeFromCart/:id', (req, res) => {
                     res.send('{"result": 1}');
                 }
             });
+
+            fs.readFile('stats.json', 'utf8', (err, data) => {
+                if (err) console.log('Error reading from stats file');
+                else {
+                    const stats = JSON.parse(data);
+                    stats.push({
+                        "product_name": searchedGoodName,
+                        "Action": "Removed",
+                        "Date": Date(),
+                    });
+                    fs.writeFile('stats.json', JSON.stringify(stats), (err) => {
+                        if (err) console.log('Error writing to stats file');
+                        else console.log('Request saved');
+                    });
+
+                }
+
+            })
+
+
         }
     });
 });
